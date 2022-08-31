@@ -8,6 +8,7 @@ import 'package:sendbird_flutter/widgets/custom_padding.dart';
 class BasicExampleRoute extends StatelessWidget {
   BasicExampleRoute({Key? key}) : super(key: key);
 
+  // ignore: unused_field
   final BaseAuth _authentication = Get.find<AuthenticationController>();
 
   @override

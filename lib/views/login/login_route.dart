@@ -10,7 +10,7 @@ import '../root_route.dart';
 class LoginRoute extends StatefulWidget {
   final VoidCallback onSignedIn;
   final Examples examples;
-  LoginRoute({
+  const LoginRoute({
     Key? key,
     required this.onSignedIn,
     required this.examples,

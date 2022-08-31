@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 const String MAIN_ROUTE = '/mainRoute';
 const String ROOT_ROUTE = '/rootRoute';
 const String BASIC_GROUP_CHANNEL_ROUTE = '/basicGroupChannelRoute';
