@@ -1,0 +1,1 @@
+const sendbirdAppId = "E1B4C3EC-AF1F-4888-9237-11223F1137D8";
