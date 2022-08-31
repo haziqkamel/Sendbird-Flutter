@@ -6,6 +6,7 @@ AppBar customAppBar({
   List<Widget>? actions,
 }) {
   return AppBar(
+    backgroundColor: Colors.pink,
     centerTitle: false,
     leading: includeLeading
         ? const SizedBox.square(

@@ -5,6 +5,7 @@ import 'package:sendbird_flutter/views/basic_example/basic_example_route.dart';
 import 'package:sendbird_flutter/views/basic_example/basic_group_channel_route.dart';
 import 'package:sendbird_flutter/views/features_example/features_example_route.dart';
 import 'package:sendbird_flutter/views/main_route.dart';
+import 'package:sendbird_flutter/views/profile_route.dart';
 import 'package:sendbird_flutter/views/root_route.dart';
 
 final List<GetPage> getPageRoutes = [
@@ -17,4 +18,5 @@ final List<GetPage> getPageRoutes = [
       name: BASIC_GROUP_CHANNEL_ROUTE,
       page: () => const BasicGroupChannelRoute()),
   GetPage(name: CREATE_CHANNEL_ROUTE, page: () => const CreateChannelRoute()),
+  GetPage(name: PROFILE_ROUTE, page: () => const ProfileRoute()),
 ];
