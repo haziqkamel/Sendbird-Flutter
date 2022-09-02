@@ -91,60 +91,65 @@ class _BasicGroupChannelRouteState extends State<BasicGroupChannelRoute> {
       body: LiquidPullToRefresh(
         onRefresh: () => refresh(),
         child: SingleChildScrollView(
-          child: FutureBuilder<List<GroupChannel>>(
-            future: loadGroupChannelList(),
-            builder: (context, groupChannelList) {
-              if (groupChannelList.hasData) {
-                return ListView.builder(
-                  itemCount: groupChannelList.data?.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, i) {
-                    return ListTile(
-                      leading: getGroupChannelIcon(groupChannelList.data?[i]),
-                      trailing: groupChannelList.data?[i].creator?.userId !=
-                              _authentication.currentUser?.userId
-                          ? null
-                          : GestureDetector(
-                              onTap: () => customDialog(context,
-                                  title: 'Are you sure to delete this group?',
-                                  content:
-                                      'Deleting this group will permanently remove group from server',
-                                  buttonText1: 'Delete',
-                                  type: DialogType.oneButton, onTap1: () async {
-                                await deleteChannel(
-                                  channel: groupChannelList.data![i],
-                                ).then((_) async {
-                                  await loadGroupChannelList();
-                                  setState(() {});
-                                });
-                              }),
-                              child: const Icon(Icons.edit),
-                            ),
-                      title: Text(groupChannelList.data?[i].name ?? 'No Name'),
-                      subtitle: Text(
-                        groupChannelList.data?[i].lastMessage?.message ?? '',
-                      ),
-                      onTap: () {
-                        Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
-                          ChannelType.group
-                        ], parameters: {
-                          'channelUrl':
-                              groupChannelList.data?[i].channelUrl ?? ''
-                        })?.then((_) {
-                          setState(() {});
-                        });
-                      },
-                    );
-                  },
-                );
-              } else if (groupChannelList.hasError) {
-                return const Text('Error Retrieving Group Channel');
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FutureBuilder<List<GroupChannel>>(
+              future: loadGroupChannelList(),
+              builder: (context, groupChannelList) {
+                if (groupChannelList.hasData) {
+                  return ListView.builder(
+                    itemCount: groupChannelList.data?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, i) {
+                      return ListTile(
+                        leading: getGroupChannelIcon(groupChannelList.data?[i]),
+                        trailing: groupChannelList.data?[i].creator?.userId !=
+                                _authentication.currentUser?.userId
+                            ? null
+                            : GestureDetector(
+                                onTap: () => customDialog(context,
+                                    title: 'Are you sure to delete this group?',
+                                    content:
+                                        'Deleting this group will permanently remove group from server',
+                                    buttonText1: 'Delete',
+                                    type: DialogType.oneButton,
+                                    onTap1: () async {
+                                  await deleteChannel(
+                                    channel: groupChannelList.data![i],
+                                  ).then((_) async {
+                                    await loadGroupChannelList();
+                                    setState(() {});
+                                  });
+                                }),
+                                child: const Icon(Icons.edit),
+                              ),
+                        title:
+                            Text(groupChannelList.data?[i].name ?? 'No Name'),
+                        subtitle: Text(
+                          groupChannelList.data?[i].lastMessage?.message ?? '',
+                        ),
+                        onTap: () {
+                          Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
+                            ChannelType.group
+                          ], parameters: {
+                            'channelUrl':
+                                groupChannelList.data?[i].channelUrl ?? ''
+                          })?.then((_) {
+                            setState(() {});
+                          });
+                        },
+                      );
+                    },
+                  );
+                } else if (groupChannelList.hasError) {
+                  return const Text('Error Retrieving Group Channel');
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),

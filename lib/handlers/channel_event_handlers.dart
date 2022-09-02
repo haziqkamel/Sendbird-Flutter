@@ -9,7 +9,7 @@ class ChannelEventHandlers with ChannelEventHandler {
   List<BaseMessage> messages = RxList.empty(growable: true);
   late VoidCallback? callback;
   late BaseChannel channel;
-  
+
   ChannelEventHandlers({
     required this.channelUrl,
     required this.channelType,
@@ -111,5 +111,4 @@ class ChannelEventHandlers with ChannelEventHandler {
 
     return messages;
   }
-
 }

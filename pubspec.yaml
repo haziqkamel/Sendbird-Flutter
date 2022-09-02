@@ -38,6 +38,8 @@ dependencies:
   get: ^4.6.5
   liquid_pull_to_refresh: ^3.0.1
   image_picker: ^0.8.5+3
+  cached_network_image: ^3.2.1
+  path_provider: ^2.0.11
 
 dev_dependencies:
   flutter_test:

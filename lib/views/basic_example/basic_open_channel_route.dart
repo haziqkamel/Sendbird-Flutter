@@ -83,17 +83,40 @@ class _BasicOpenChannelRouteState extends State<BasicOpenChannelRoute> {
     );
   }
 
-  Future<void> _joinOpenChannel(OpenChannel channel) async {
-    customDialog(
-      context,
-      title: 'Join Channel',
-      content: 'Would you like to join the channel?',
-      buttonText1: 'Yes',
-      buttonText2: 'Cancel',
-      type: DialogType.twoButton,
-      onTap1: () async => await channel.enter(),
-      onTap2: () => Navigator.canPop(context),
-    );
+  void _joinOpenChannel(
+      AsyncSnapshot<List<OpenChannel>> openChannelList, int i) async {
+    // customDialog(
+    //   context,
+    //   title: 'Join Channel',
+    //   content: 'Would you like to join the channel?',
+    //   buttonText1: 'Yes',
+    //   buttonText2: 'Cancel',
+    //   type: DialogType.twoButton,
+    //   onTap1: () {
+    //     openChannelList.data?[i].enter().then((_) {
+    //       Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
+    //         ChannelType.open
+    //       ], parameters: {
+    //         'channelUrl': openChannelList.data?[i].channelUrl ?? ''
+    //       })?.then((_) {
+    //         openChannelList.data?[i].exit();
+    //       });
+    //     });
+    //   },
+    //   onTap2: () {
+    //     Navigator.canPop(context);
+    //   },
+    // );
+    openChannelList.data?[i].enter().then((_) {
+      Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
+        ChannelType.open
+      ], parameters: {
+        'channelUrl': openChannelList.data?[i].channelUrl ?? ''
+      })?.then((_) {
+        // openChannelList.data?[i].exit();
+        setState(() {});
+      });
+    });
   }
 
   Future<void> refresh() async {
@@ -122,59 +145,55 @@ class _BasicOpenChannelRouteState extends State<BasicOpenChannelRoute> {
       body: LiquidPullToRefresh(
         onRefresh: () => refresh(),
         child: SingleChildScrollView(
-          child: FutureBuilder<List<OpenChannel>>(
-            future: loadOpenChannelList(),
-            builder: (context, openChannelList) {
-              if (openChannelList.hasData) {
-                return ListView.builder(
-                  itemCount: openChannelList.data?.length,
-                  shrinkWrap: true,
-                  itemBuilder: (context, i) {
-                    return ListTile(
-                      leading: getOpenChannelIcon(openChannelList.data![i]),
-                      trailing: openChannelList.data![i]
-                              .isOperator(_authentication.currentUser!.userId)
-                          ? null
-                          : _deleteOpenChannel(openChannelList, i),
-                      title: Text(openChannelList.data?[i].name ?? 'No Name'),
-                      subtitle: Text(
-                        'Number of participant: ${openChannelList.data?[i].participantCount.toString() ?? ''}',
-                      ),
-                      onTap: () async {
-                        if (openChannelList.data![i].entered) {
-                          Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
-                            ChannelType.group
-                          ], parameters: {
-                            'channelUrl':
-                                openChannelList.data?[i].channelUrl ?? ''
-                          })?.then((_) {
-                            setState(() {});
-                          });
-                        } else {
-                          await _joinOpenChannel(openChannelList.data![i])
-                              .then((_) {
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FutureBuilder<List<OpenChannel>>(
+              future: loadOpenChannelList(),
+              builder: (context, openChannelList) {
+                if (openChannelList.hasData) {
+                  return ListView.builder(
+                    itemCount: openChannelList.data?.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, i) {
+                      return ListTile(
+                        leading: getOpenChannelIcon(openChannelList.data![i]),
+                        trailing: openChannelList.data![i]
+                                .isOperator(_authentication.currentUser!.userId)
+                            ? null
+                            : _deleteOpenChannel(openChannelList, i),
+                        title: Text(openChannelList.data?[i].name ?? 'No Name'),
+                        subtitle: Text(
+                          'Online participant: ${openChannelList.data?[i].participantCount.toString() ?? ''}',
+                        ),
+                        onTap: () {
+                          if (openChannelList.data![i].entered) {
+                            print('User have entered channel');
                             Get.toNamed(CHAT_ROOM_ROUTE, arguments: [
-                              ChannelType.group
+                              ChannelType.open
                             ], parameters: {
                               'channelUrl':
                                   openChannelList.data?[i].channelUrl ?? ''
                             })?.then((_) {
+                              // openChannelList.data?[i].exit();
                               setState(() {});
                             });
-                          });
-                        }
-                      },
-                    );
-                  },
-                );
-              } else if (openChannelList.hasError) {
-                return const Text('Error Retrieving Open Channel');
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            },
+                          } else {
+                            print('User have not enter channel');
+                            _joinOpenChannel(openChannelList, i);
+                          }
+                        },
+                      );
+                    },
+                  );
+                } else if (openChannelList.hasError) {
+                  return const Text('Error Retrieving Open Channel');
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
           ),
         ),
       ),
