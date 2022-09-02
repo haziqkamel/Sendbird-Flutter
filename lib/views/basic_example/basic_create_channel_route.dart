@@ -38,9 +38,10 @@ class _CreateChannelRouteState extends State<CreateChannelRoute> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
-          title:
-              'Create ${_channelType == ChannelType.group ? 'Group' : 'Open'} Channel',
-          includeLeading: false),
+        title:
+            'Create ${_channelType == ChannelType.group ? 'Group' : 'Open'} Channel',
+        includeLeading: false,
+      ),
       body: SingleChildScrollView(
         child: customPadding(
           widget: Column(
@@ -80,33 +81,35 @@ class _CreateChannelRouteState extends State<CreateChannelRoute> {
                 ),
               ),
               const SizedBox(height: 20),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      controller: _inviteIdController,
-                      decoration: const InputDecoration(
-                        hintText: 'Invite UserId',
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey),
+              _channelType == ChannelType.group
+                  ? Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _inviteIdController,
+                            decoration: const InputDecoration(
+                              hintText: 'Invite UserId',
+                              border: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      if (_inviteIdController.value.text.isEmpty) {
-                        return;
-                      }
-                      _inviteIds.add(_inviteIdController.value.text);
-                      _inviteIdController.clear();
-                      FocusScope.of(context).unfocus();
-                      setState(() {});
-                    },
-                    icon: const Icon(Icons.add),
-                  )
-                ],
-              ),
+                        IconButton(
+                          onPressed: () {
+                            if (_inviteIdController.value.text.isEmpty) {
+                              return;
+                            }
+                            _inviteIds.add(_inviteIdController.value.text);
+                            _inviteIdController.clear();
+                            FocusScope.of(context).unfocus();
+                            setState(() {});
+                          },
+                          icon: const Icon(Icons.add),
+                        )
+                      ],
+                    )
+                  : Container(),
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () async {
@@ -125,7 +128,11 @@ class _CreateChannelRouteState extends State<CreateChannelRoute> {
                         ..userIds = _inviteIds;
                       break;
                     case ChannelType.open:
-                      // TODO: Handle this case
+                      params = OpenChannelParams()
+                        ..name = _channelNameController.text
+                        ..operatorUserIds = [
+                          _authentication.currentUser!.userId
+                        ];
                       break;
                   }
                   await createChannel(

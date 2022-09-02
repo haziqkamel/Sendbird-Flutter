@@ -29,7 +29,7 @@ class BasicExampleRoute extends StatelessWidget {
               const SizedBox(height: 20),
               TextButton(
                 onPressed: () {
-                  // Get.toNamed(OPENCHANNELROUTE);
+                  Get.toNamed(BASIC_OPEN_CHANNEL_ROUTE);
                 },
                 child: const Text(
                   'Open Channel Example',
